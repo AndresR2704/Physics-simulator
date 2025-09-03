@@ -7,9 +7,6 @@ def apply_physics(particles, velocities, gravity, width, height, dt, damping):
     # Apply gravity to y velocity
     new_velocities[:, 1] += gravity
     
-    # Apply damping to all velocities (global energy loss)
-    new_velocities *= damping
-    
     return new_particles, new_velocities
 
 def apply_boundary_collisions(particles, velocities, width, height, damping):
@@ -91,4 +88,5 @@ def apply_particle_collisions_elastic(particles, velocities, radius=15, restitut
                     new_particles[i] -= separation * np.array([nx, ny])
                     new_particles[j] += separation * np.array([nx, ny])
     
+
     return new_particles, new_velocities

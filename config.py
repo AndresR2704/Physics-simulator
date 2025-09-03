@@ -4,8 +4,8 @@ import numpy as np
 def get_simulation_parameters():
     params = {
         'num_particles': 50,
-        'width': 1535,
-        'height': 800,
+        'width': 1500,
+        'height': 750,
         'dt': 0.1,
         'gravity': 2.0,
         'particle_radius': 20,
@@ -13,10 +13,10 @@ def get_simulation_parameters():
         'max_radius': 25,
         'collision_scale': 2,
         'damping': 1.0,
-        'min_damping': 0.1,
+        'min_damping': 0.0,
         'max_damping': 1.0,
         'restitution': 1.0,
-        'min_restitution': 0.1,
+        'min_restitution': 0.0,
         'max_restitution': 1.0
     }
     return params
@@ -25,4 +25,5 @@ def get_simulation_parameters():
 def initialize_particles(num_particles, width, height):
     particles = np.random.rand(num_particles, 2) * np.array([width, height // 2])
     velocities = np.zeros((num_particles, 2))
+
     return particles, velocities

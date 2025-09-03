@@ -1,4 +1,5 @@
 import pygame
+import numpy as np
 from config import get_simulation_parameters, initialize_particles
 from physics_engine import apply_physics, apply_boundary_collisions, apply_particle_collisions_elastic
 from visualizer import Slider, draw_particles, draw_ui, BACKGROUND
@@ -12,7 +13,7 @@ def main():
     width, height = params['width'], params['height']
     
     screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Fluid Simulator with Interactive Controls")
+    pygame.display.set_caption("Fluid Simulator with Proper Physics")
     clock = pygame.time.Clock()
     font = pygame.font.SysFont(None, 24)
     
@@ -76,35 +77,37 @@ def main():
             for slider in sliders:
                 slider.handle_event(event)
         
-        # Update physics with current values from sliders
+        # 1. Apply physics
         particles, velocities = apply_physics(
             particles, 
             velocities, 
             gravity_slider.value, 
-            width, 
-            height, 
+            width,
+            height,
             params['dt'],
             damping_slider.value
         )
         
-        # Apply particle collisions with current parameters
+        # 2. Apply particle collisions
         particles, velocities = apply_particle_collisions_elastic(
             particles, 
             velocities, 
-            radius=radius_slider.value * params['collision_scale'],  # Simple scaling
+            radius=radius_slider.value * 2,
             restitution=restitution_slider.value
+            # Note: You could add damping here if you want particle collision damping
+            # damping=damping_slider.value
         )
         
-        # Update positions after collisions
+        # 3. Update positions based on velocities
         particles += velocities * params['dt']
         
-        # Apply boundary collisions with current damping
+        # 4. Apply boundary collisions (THIS IS WHERE DAMPING HAPPENS)
         particles, velocities = apply_boundary_collisions(
             particles,
             velocities,
             width,
             height,
-            damping_slider.value
+            damping_slider.value  # ✅ Damping only applied during actual wall collisions
         )
         
         # Drawing
